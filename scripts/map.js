@@ -14,9 +14,12 @@ function covidColor(n) {
                       'hsl(180, 100%, 90%)';
 }
 // Popup
-function setPopup(objet, layer) {
-    if (objet.properties && objet.properties.nom && objet.properties.deceased) {
-        let content = '<h3>' + objet.properties.nom + '</h3><b>Décès :</b> ' +  objet.properties.deceased.T;
+function setPopup(department, layer) {
+    if (department.properties && department.properties.nom && department.properties.deceased) {
+        let content = '<h3>' + department.properties.nom + ' (' + department.properties.code + ')</h3>\
+        <p><b>Décès :</b> ' +  department.properties.deceased.T + '<br />\
+        <b>Hommes :</b> ' + department.properties.deceased.M + '<br />\
+        <b>Femmes :</b> ' + department.properties.deceased.W + '</p>';
         layer.bindPopup(content);
     }
 }

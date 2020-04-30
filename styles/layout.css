@@ -1,0 +1,5 @@
+/* layout.css */
+.row { display: flex; }
+.col-left { flex: 65%; }
+.col-right { flex: 35%; }
+#map { height: 100vh; }

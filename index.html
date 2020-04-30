@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Situation du Covid en France par départements | CoviDep</title>
+    <link rel="stylesheet" href="styles/layout.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+</head>
+<body>
+
+    <h1>Situation du Covid en France</h1>
+    <h2 id="today"></h2>
+
+    <!-- Two columns layout -->
+    <div class="row">
+        <!-- Left column -->
+        <div class="col-left">
+            <!-- Map insertion -->
+            <div id="map"></div>
+        </div>
+        <!-- Right column -->
+        <div class="col-right">
+            <!-- Timeline insertion -->
+            <div id="timeline"></div>
+        </div>
+    </div> 
+
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+    <script src="scripts/map.js"></script>
+    <script>
+        let today = document.getElementById('today');
+        let date = new Date();
+        let months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout',
+            'septembre', 'octobre', 'novembre', 'décembre'];
+        today.innerHTML = date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear();
+    </script>
+</body>
+</html>

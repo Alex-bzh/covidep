@@ -28,7 +28,7 @@ def main():
         fieldnames = ['dep', 'sexe', 'jour', 'hosp', 'rea', 'rad', 'dc']
         lines = csv.DictReader(csvfile, delimiter=';', fieldnames=fieldnames)
         for line in lines:
-            if line['jour'] == '2020-04-29':
+            if line['jour'] == '2020-04-30':
                 if line['sexe'] == '0':
                     stats[line['dep']] = {'T': line['dc']}
                 if line['sexe'] == '1':

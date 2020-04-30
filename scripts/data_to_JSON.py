@@ -42,14 +42,15 @@ def main():
 
     with open(path_to_geo_full, 'w') as jsonfile:
         jsonfile.write('{"type":"FeatureCollection","features":[')
-        for department in output['features']:
+        for idx, department in enumerate(output['features']):
             code = department['properties']['code']
             department['properties'].update({
                 'deceased': stats.get(code)
                 })
             json.dump(department, jsonfile)
-            jsonfile.write(',\n')
-        jsonfile.write(']}')
+            if (idx + 1) < len(output['features']):
+                jsonfile.write(',\n')
+        jsonfile.write('\n]}\n')
 #
 #   Main
 #

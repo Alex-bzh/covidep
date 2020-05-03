@@ -2,7 +2,6 @@
 let timelineCmpnt = {
     template: `
         <div>
-            <h2>{{ dayToDisplay }}</h2>
             <select v-model="selected" @change="transmitSelected">
                 <option v-bind:value="day.value" v-for="day in days">{{ day.text }}</option>
             </select>
@@ -12,7 +11,6 @@ let timelineCmpnt = {
         return {
             start: moment([2020, 2, 18]),
             today: moment(),
-            dayToDisplay: moment().subtract(1, "days").format('LL'),
             selected: moment().subtract(1, "days").format('YYYY-MM-DD'),
             days: Array()
         }
@@ -31,7 +29,6 @@ let timelineCmpnt = {
             }
         },
         transmitSelected: function() {
-            this.dayToDisplay = moment(this.selected).format('LL');
             this.$emit('change-layer', this.selected)
         }
     }

@@ -3,7 +3,8 @@ var app = new Vue({
     data: {
         today: moment(),
         dayToDisplay: null,
-        map: null
+        map: null,
+        layer: null
     },
     components: {
         'timeline': timelineCmpnt
@@ -33,11 +34,11 @@ var app = new Vue({
             .then(stream => stream.json())
             .then(departments => {
                 // GeoJSON layer
-                L.geoJSON(departments, {
+                this.layer = L.geoJSON(departments, {
                     style: this.setStyle,
                     onEachFeature: this.setPopup
-                })
-                .addTo(this.map);
+                });
+                this.layer.addTo(this.map);
             });
         },
         initMap: function(departments) {
@@ -70,6 +71,7 @@ var app = new Vue({
         },
         changeLayer: function(day) {
             this.dayToDisplay = moment(day);
+            this.layer.removeFrom(this.map);
             this.initGeoJSON();
         }
     }

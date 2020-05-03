@@ -1,43 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
     <title>Situation du Covid en France par départements | CoviDep</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="styles/layout.css"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-        crossorigin=""/>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"/>
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
 </head>
 <body>
-
-    <h1>Situation du Covid en France</h1>
-    <h2 id="today"></h2>
-
-    <!-- Two columns layout -->
-    <div class="row">
-        <!-- Left column -->
-        <div class="col-left">
-            <!-- Map insertion -->
-            <div id="map"></div>
+    <div id="app" class="container-fluid">
+        <div class="row">
+            <div class="col-md-10">
+                <div id="map"></div>  
+            </div>
+            <div class="col-md-2">
+                <h1>Le Covid en France</h1>
+                <timeline @change-layer="changeLayer"></timeline>
+            </div>
         </div>
-        <!-- Right column -->
-        <div class="col-right">
-            <!-- Timeline insertion -->
-            <div id="timeline"></div>
-        </div>
-    </div> 
-
+    </div>
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.25.1/locale/fr.min.js"></script>
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
         integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
         crossorigin=""></script>
-    <script src="scripts/map.js"></script>
-    <script>
-        let today = document.getElementById('today');
-        let date = new Date();
-        let months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout',
-            'septembre', 'octobre', 'novembre', 'décembre'];
-        today.innerHTML = date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear();
-    </script>
+    <script src="./app/components/timeline.js"></script>
+    <script src="./app/main.js"></script>
 </body>
 </html>

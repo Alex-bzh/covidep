@@ -13,6 +13,7 @@ function covidColor(n) {
             n > 25 ? 'hsl(180, 100%, 70%)' :
                       'hsl(180, 100%, 90%)';
 }
+
 // Popup
 function setPopup(department, layer) {
     if (department.properties && department.properties.nom && department.properties.deceased) {

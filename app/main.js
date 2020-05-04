@@ -66,12 +66,11 @@ var app = new Vue({
                 fillColor: this.covidColor(department.properties.deceased[day][0]),
                 weight: 1,
                 color: 'white',
-                fillOpacity: .7
+                fillOpacity: 1
             };
         },
         changeLayer: function(day) {
             this.dayToDisplay = moment(day);
-            this.layer.removeFrom(this.map);
             this.initGeoJSON();
         }
     }

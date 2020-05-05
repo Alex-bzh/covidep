@@ -1,35 +1,40 @@
 // timeline.js
 let timelineCmpnt = {
     template: `
-        <div>
-            <select v-model="selected" @change="transmitSelected">
-                <option v-bind:value="day.value" v-for="day in days">{{ day.text }}</option>
-            </select>
-        </div>
+        <select v-model="selected" @change="transmitSelected">
+            <option v-bind:value="date.value" v-for="date in dates">{{ date.text }}</option>
+        </select>
     `,
     data: function() {
         return {
-            start: moment([2020, 2, 18]),
-            today: moment(),
             selected: moment().subtract(1, "days").format('YYYY-MM-DD'),
-            days: Array()
+            dates: Array()
         }
     },
     mounted: function() {
-        this.listDays();
+        this.listDates();
     },
     methods: {
-        listDays: function() {
-            let diff = this.today.diff(this.start, "days");
+        listDates() {
+            /*
+            *   Lists all the dates between now and March the 18th, 2020:
+            *   the start date of the Covid accounts in France.
+            */
+            let start = moment([2020, 2, 18]);
+            let today = moment();
+            let diff = today.diff(start, "days");
             for (var i = diff - 1; i >= 0; i--) {
-                this.days.push({
-                    text: this.today.subtract(1, 'days').format('LL'),
-                    value: this.today.format('YYYY-MM-DD')
+                this.dates.push({
+                    text: today.subtract(1, 'days').format('LL'),
+                    value: today.format('YYYY-MM-DD')
                 });
             }
         },
+        /*
+        *   Triggers an event to change the key date
+        */
         transmitSelected: function() {
-            this.$emit('change-layer', this.selected)
+            this.$emit('change-date', this.selected)
         }
     }
 }

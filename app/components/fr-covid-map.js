@@ -3,7 +3,7 @@ let frCovidMapCmpnt = {
     template: `<div id="map"></div>`,
     data: function() {
         return {
-            dateToDisplay: moment().subtract(1, 'days'),
+            dateToDisplay: null,
             map: null,
             layer: null
         }
@@ -31,10 +31,13 @@ let frCovidMapCmpnt = {
         /*
         *   Initializes a GeoJSON layer.
         */
-        initGeoJSON: function() {
+        initGeoJSON: function(date = null) {
             fetch('./data/covid-france.json')
             .then(stream => stream.json())
             .then(departments => {
+                // If no date is selected, then considers the property date
+                // from the data
+                this.dateToDisplay = (date == null) ? moment(departments.date) : moment(date);
                 // GeoJSON layer
                 this.layer = L.geoJSON(departments, {
                     style: this.setStyle,
@@ -54,13 +57,6 @@ let frCovidMapCmpnt = {
                 attribution: 'Données géographiques © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributeurs, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
                 maxZoom: 18
             }).addTo(this.map);
-        },
-        /*
-        *   Refreshes the GeoJSON layer with new properties.
-        */
-        setLayer: function(day) {
-            this.dateToDisplay = moment(day);
-            this.initGeoJSON();
         },
         /*
         *   Sets the popup on a particular department.

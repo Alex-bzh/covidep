@@ -10,8 +10,9 @@ var app = new Vue({
         *   it triggers a new GeoJSON layer.
         */
         changeDate: function(date) {
-            // A call to the method setLayer() in the frCovidMapCmpnt
-            this.$refs.map.setLayer(date);
+            // A call to the method initGeoJSON() in the frCovidMapCmpnt
+            // to set a new layer.
+            this.$refs.map.initGeoJSON(date);
         }
     }
 })

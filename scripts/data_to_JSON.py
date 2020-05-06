@@ -28,44 +28,57 @@ def main():
 
     # Useful structures to analyse the data
     accounts = dict()   # Dictionary with the accounts
-    days = set()        # All the days listed
+    dates = set()       # All the dates listed
     departments = set() # All the departments listed
 
     # Reading the CSV file
     with open(path_to_data, newline='') as csvfile:
-        fieldnames = ['code', 'sex', 'day', 'hosp', 'rea', 'rad', 'dc']
+        fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'rad', 'dc']
         lines = csv.DictReader(csvfile, delimiter=';', fieldnames=fieldnames)
         for idx, line in enumerate(lines):
+            # Skips the header
             if idx != 0:
-                days.add(line['day'])
+                # Lists all the dates and all the departments
+                dates.add(line['date'])
                 departments.add(line['code'])
 
+    # Each department is set up with an empty account for each date
     for department in departments:
         accounts.update({
-            department: { day: dict() for day in days }
+            department: { date: dict() for date in dates }
         })
 
+    # Reading the CSV file a second time
     with open(path_to_data, newline='') as csvfile:
-        fieldnames = ['code', 'sex', 'day', 'hosp', 'rea', 'rad', 'dc']
+        fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'rad', 'dc']
         lines = csv.DictReader(csvfile, delimiter=';', fieldnames=fieldnames)
         for idx, line in enumerate(lines):
             if idx != 0:
-                accounts[line['code']][line['day']][line['sex']] = line['dc']
+                # Updates the account of each department with the number
+                # of deceased people, day by day
+                accounts[line['code']][line['date']][line['sex']] = line['dc']
 
-    # Reading the geoJSON file
+    # Reading the geoJSON file of the departments
     with open(path_to_geo) as geojson:
         output = json.load(geojson)
 
+    # Writes a geoJSON file
     with open(path_to_geo_full, 'w') as jsonfile:
-        jsonfile.write('{"type":"FeatureCollection","features":[')
+        # The most recent recorded date
+        recent = max(dates)
+        jsonfile.write('{"date":"' + recent + '","type":"FeatureCollection","features":[')
         for idx, department in enumerate(output['features']):
+            # Code of the department (e.g.: 75, 01, 37…)
             code = department['properties']['code']
+            # Looks up in the accounts the records for this particular department
             department['properties'].update({
                 'deceased': accounts.get(code)
-                })
+            })
+            # As a JSON formatted stream
             json.dump(department, jsonfile)
             if (idx + 1) < len(output['features']):
                 jsonfile.write(',\n')
+        # Closes the FeatureCollection and the geoJSON file
         jsonfile.write('\n]}\n')
 
 #

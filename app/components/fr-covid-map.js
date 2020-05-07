@@ -4,13 +4,14 @@ let frCovidMapCmpnt = {
     data: function() {
         return {
             dateToDisplay: null,
+            layer: null,
             map: null,
-            layer: null
+            mostRecentDate: null
         }
     },
     mounted: function() {
+        this.fetchData();
         this.initMap();
-        this.initGeoJSON();
     },
     methods: {
         /*
@@ -27,6 +28,20 @@ let frCovidMapCmpnt = {
                     n > 50 ? 'hsl(180, 100%, 50%)' :
                     n > 25 ? 'hsl(180, 100%, 70%)' :
                               'hsl(180, 100%, 90%)';
+        },
+        /*
+        *   Fetches the data
+        */
+        fetchData() {
+            fetch('./data/covid-france.json')
+            .then(stream => stream.json())
+            .then(data => {
+                this.mostRecentDate = data.date;
+                this.departments = data.features;
+                // Initializes the GeoJSON layer only after
+                // data is loaded.
+                this.$nextTick(() => this.initGeoJSON());
+            });
         },
         /*
         *   Highlights a department
@@ -47,21 +62,17 @@ let frCovidMapCmpnt = {
         *   Initializes a GeoJSON layer.
         */
         initGeoJSON(date = null) {
-            fetch('./data/covid-france.json')
-            .then(stream => stream.json())
-            .then(departments => {
-                // If defined, the previous layer is removed for optimization purposes
-                if (this.layer) this.map.removeLayer(this.layer);
-                // If no date is selected, then considers the property date
-                // from the data
-                this.dateToDisplay = (date == null) ? moment(departments.date) : moment(date);
-                // GeoJSON layer
-                this.layer = L.geoJSON(departments, {
-                    style: this.setStyle,
-                    onEachFeature: this.onEachFeature
-                });
-                this.layer.addTo(this.map);
+            // If defined, the previous layer is removed for optimization purposes
+            if (this.layer) this.map.removeLayer(this.layer);
+            // If no date is selected, then considers the property date
+            // from the data
+            this.dateToDisplay = (date == null) ? moment(this.mostRecentDate) : moment(date);
+            // GeoJSON layer
+            this.layer = L.geoJSON(this.departments, {
+                style: this.setStyle,
+                onEachFeature: this.onEachFeature
             });
+            this.layer.addTo(this.map);
         },
         /*
         *   Initializes an OpenStreetMap.

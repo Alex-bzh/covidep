@@ -14,7 +14,6 @@ let timelineCmpnt = {
                 </button>
             </div>
         </div>`,
-    */
     data() {
         return {
             dates: Array()

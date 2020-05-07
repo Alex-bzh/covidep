@@ -1,17 +1,26 @@
 // timeline.js
 let timelineCmpnt = {
     template: `
-        <select v-model="selected" @change="transmitSelected">
-            <option v-bind:value="date.value" v-for="date in dates">{{ date.text }}</option>
-        </select>
-    `,
-    data: function() {
+        <div>
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="datesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Choisissez une date
+            </button>
+            <div class="dropdown-menu scrollable-menu" aria-labelledby="datesMenu">
+                <button class="dropdown-item" type="button"
+                    :value="date.value"
+                    v-for="date in dates"
+                    @mouseover="transmitSelected">
+                    {{ date.text }}
+                </button>
+            </div>
+        </div>`,
+    */
+    data() {
         return {
-            selected: moment().subtract(1, "days").format('YYYY-MM-DD'),
             dates: Array()
         }
     },
-    mounted: function() {
+    mounted() {
         this.listDates();
     },
     methods: {
@@ -33,8 +42,8 @@ let timelineCmpnt = {
         /*
         *   Triggers an event to change the key date
         */
-        transmitSelected: function() {
-            this.$emit('change-date', this.selected)
+        transmitSelected(e) {
+            this.$emit('change-date', e.target.getAttribute('value'));
         }
     }
 }

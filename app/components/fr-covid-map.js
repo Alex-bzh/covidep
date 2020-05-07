@@ -50,6 +50,8 @@ let frCovidMapCmpnt = {
             fetch('./data/covid-france.json')
             .then(stream => stream.json())
             .then(departments => {
+                // If defined, the previous layer is removed for optimization purposes
+                if (this.layer) this.map.removeLayer(this.layer);
                 // If no date is selected, then considers the property date
                 // from the data
                 this.dateToDisplay = (date == null) ? moment(departments.date) : moment(date);
@@ -117,6 +119,9 @@ let frCovidMapCmpnt = {
                 fillOpacity: 1
             };
         },
+        /*
+        *   Provokes a zoom on the map, to the bounds of the department
+        */
         zoomToFeature(event) {
             this.map.fitBounds(event.target.getBounds());
         }

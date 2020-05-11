@@ -19,22 +19,19 @@ let timelineCmpnt = {
             dates: Array()
         }
     },
-    mounted() {
-        this.listDates();
-    },
     methods: {
-        listDates() {
+        listDates(start, end) {
             /*
             *   Lists all the dates between now and March the 18th, 2020:
             *   the start date of the Covid accounts in France.
             */
-            let start = moment([2020, 2, 18]);
-            let today = moment();
-            let diff = today.diff(start, "days");
-            for (var i = diff - 1; i >= 0; i--) {
+            let startDate = moment(start);
+            let endDate = moment(end).add(1, "days");
+            let diff = endDate.diff(startDate, "days");
+            for (let i = diff - 1; i >= 0; i--) {
                 this.dates.push({
-                    text: today.subtract(1, 'days').format('LL'),
-                    value: today.format('YYYY-MM-DD')
+                    text: endDate.subtract(1, "days").format('LL'),
+                    value: endDate.format('YYYY-MM-DD')
                 });
             }
         },
@@ -42,7 +39,7 @@ let timelineCmpnt = {
         *   Triggers an event to change the key date
         */
         transmitSelected(e) {
-            this.$emit('change-date', e.target.getAttribute('value'));
+            this.$emit('change-layer', e.target.getAttribute('value'));
         }
     }
 }

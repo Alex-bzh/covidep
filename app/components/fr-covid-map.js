@@ -5,12 +5,10 @@ let frCovidMapCmpnt = {
         return {
             dateToDisplay: null,
             layer: null,
-            map: null,
-            mostRecentDate: null
+            map: null
         }
     },
     mounted: function() {
-        this.fetchData();
         this.initMap();
     },
     methods: {
@@ -30,20 +28,6 @@ let frCovidMapCmpnt = {
                               'hsl(180, 100%, 90%)';
         },
         /*
-        *   Fetches the data
-        */
-        fetchData() {
-            fetch('./data/covid-france.json')
-            .then(stream => stream.json())
-            .then(data => {
-                this.mostRecentDate = data.date;
-                this.departments = data.features;
-                // Initializes the GeoJSON layer only after
-                // data is loaded.
-                this.$nextTick(() => this.initGeoJSON());
-            });
-        },
-        /*
         *   Highlights a department
         */
         highlightFeature(event) {
@@ -61,14 +45,14 @@ let frCovidMapCmpnt = {
         /*
         *   Initializes a GeoJSON layer.
         */
-        initGeoJSON(date = null) {
+        initGeoJSON(departments, date) {
             // If defined, the previous layer is removed for optimization purposes
             if (this.layer) this.map.removeLayer(this.layer);
             // If no date is selected, then considers the property date
             // from the data
-            this.dateToDisplay = (date == null) ? moment(this.mostRecentDate) : moment(date);
+            this.dateToDisplay = moment(date);
             // GeoJSON layer
-            this.layer = L.geoJSON(this.departments, {
+            this.layer = L.geoJSON(departments, {
                 style: this.setStyle,
                 onEachFeature: this.onEachFeature
             });

@@ -23,7 +23,7 @@ Then, open your web browser and navigate to the URL `http://localhost:8080`.
 SPF (Santé publique France) provide [updated data day by day](https://www.data.gouv.fr/fr/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/).
 
 1. download the CSV file called `donnees-hospitalieres-covid19-2020\*.csv`
-2. save it in the `scripts` folder
+2. save it in the `data` folder
 3. run the script `data_to_JSON.py`
 ```shell
 $ python data_to_JSON.py

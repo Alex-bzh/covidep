@@ -12,8 +12,15 @@ import csv
 import json
 import datetime
 
+def format_date(date):
+    if '/' in date:
+        date = date.split('/')
+        date = f'{date[2]}-{date[1]}-{date[0]}'
+
+    return date
+
 #
-#   User functions
+#   Main function
 #
 def main():
 
@@ -38,8 +45,10 @@ def main():
         for idx, line in enumerate(lines):
             # Skips the header
             if idx != 0:
+                # Dates do not all respect the same format
+                date = format_date(line['date'])
                 # Lists all the dates and all the departments
-                dates.add(line['date'])
+                dates.add(date)
                 departments.add(line['code'])
 
     # Each department is set up with an empty account for each date
@@ -54,9 +63,11 @@ def main():
         lines = csv.DictReader(csvfile, delimiter=';', fieldnames=fieldnames)
         for idx, line in enumerate(lines):
             if idx != 0:
+                # Dates do not all respect the same format
+                date = format_date(line['date'])
                 # Updates the account of each department with the number
                 # of deceased people, day by day
-                accounts[line['code']][line['date']][line['sex']] = line['dc']
+                accounts[line['code']][date][line['sex']] = line['dc']
 
     # Reading the geoJSON file of the departments
     with open(path_to_geo) as geojson:

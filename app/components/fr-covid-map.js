@@ -1,4 +1,4 @@
-// map.js
+// fr-covid-map.js
 let frCovidMapCmpnt = {
     template: `<div id="map"></div>`,
     data: function() {

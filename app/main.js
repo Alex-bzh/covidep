@@ -12,7 +12,8 @@ var app = new Vue({
     },
     components: {
         'timeline': timelineCmpnt,
-        'fr-covid-map': frCovidMapCmpnt
+        'fr-covid-map': frCovidMapCmpnt,
+        'metrics': metricsCmpnt
     },
     computed: {
         /*
@@ -47,6 +48,7 @@ var app = new Vue({
                 // Initializes the GeoJSON layer
                 this.$refs.map.initGeoJSON(data.features, data.date);
                 this.$refs.timeline.listDates([2020, 2, 18], data.date);
+
             });
         }
     }

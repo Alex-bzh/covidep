@@ -34,6 +34,7 @@ def main():
     path_to_geo = '../data/departements.geojson'
     path_to_data = '../data/donnees-hospitalieres.csv'
     path_to_geo_full = '../data/covid-france.json'
+    path_to_metrics = '../data/metrics.json'
 
     # Useful structures to analyse the data
     accounts = dict()   # Dictionary with the accounts
@@ -59,6 +60,21 @@ def main():
             department: {
                 'deceased': { date: dict() for date in dates },
                 'rea': { date: dict() for date in dates }
+            },
+            "metrics": {
+                date: {
+                    "deceased": {
+                        "0": int(),
+                        "1": int(),
+                        "2": int()
+                    },
+                    "rea": {
+                        "0": int(),
+                        "1": int(),
+                        "2": int()
+                    }
+                }
+                for date in dates
             }
         })
 
@@ -75,6 +91,12 @@ def main():
                 # - the number of people in reanimation at the day.
                 accounts[line['code']]['deceased'][date][line['sex']] = line['dc']
                 accounts[line['code']]['rea'][date][line['sex']] = line['rea']
+                # Updates the nationwide metrics
+                accounts['metrics'][date]['deceased'][line['sex']] += int(line['dc'])
+                accounts['metrics'][date]['rea'][line['sex']] += int(line['rea'])
+
+    # Sorts the metrics by date
+    accounts['metrics'] = dict(sorted(accounts['metrics'].items(), key=lambda item: item[0]))
 
     # Reading the geoJSON file of the departments
     with open(path_to_geo) as geojson:
@@ -84,7 +106,8 @@ def main():
     with open(path_to_geo_full, 'w') as jsonfile:
         # The most recent recorded date
         recent = max(dates)
-        jsonfile.write('{"date":"' + recent + '","type":"FeatureCollection","features":[')
+        metrics = json.dumps(accounts['metrics'])
+        jsonfile.write('{"date":"' + recent + '", "metrics": ' + metrics + ', "type":"FeatureCollection","features":[')
         for idx, department in enumerate(output['features']):
             # Code of the department (e.g.: 75, 01, 37…)
             code = department['properties']['code']
@@ -99,6 +122,10 @@ def main():
                 jsonfile.write(',\n')
         # Closes the FeatureCollection and the geoJSON file
         jsonfile.write('\n]}\n')
+
+    # Writes the metrics file
+    with open(path_to_metrics, 'w') as jsonfile:
+        json.dump(accounts['metrics'], jsonfile);
 
 #
 #   Main

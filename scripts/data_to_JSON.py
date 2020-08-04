@@ -13,6 +13,8 @@ import json
 import datetime
 
 def format_date(date):
+    """Transforms a date from YYYY/MM/DD format to DD-MM-YYYY"""
+
     if '/' in date:
         date = date.split('/')
         date = f'{date[2]}-{date[1]}-{date[0]}'
@@ -54,7 +56,10 @@ def main():
     # Each department is set up with an empty account for each date
     for department in departments:
         accounts.update({
-            department: { date: dict() for date in dates }
+            department: {
+                'deceased': { date: dict() for date in dates },
+                'rea': { date: dict() for date in dates }
+            }
         })
 
     # Reading the CSV file a second time
@@ -65,9 +70,11 @@ def main():
             if idx != 0:
                 # Dates do not all respect the same format
                 date = format_date(line['date'])
-                # Updates the account of each department with the number
-                # of deceased people, day by day
-                accounts[line['code']][date][line['sex']] = line['dc']
+                # Updates the account of each department with:
+                # - the total amount of deceased people;
+                # - the number of people in reanimation at the day.
+                accounts[line['code']]['deceased'][date][line['sex']] = line['dc']
+                accounts[line['code']]['rea'][date][line['sex']] = line['rea']
 
     # Reading the geoJSON file of the departments
     with open(path_to_geo) as geojson:
@@ -83,7 +90,8 @@ def main():
             code = department['properties']['code']
             # Looks up in the accounts the records for this particular department
             department['properties'].update({
-                'deceased': accounts.get(code)
+                'deceased': accounts.get(code)['deceased'],
+                'rea': accounts.get(code)['rea']
             })
             # As a JSON formatted stream
             json.dump(department, jsonfile)

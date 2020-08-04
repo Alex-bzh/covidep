@@ -96,9 +96,30 @@ let frCovidMapCmpnt = {
             let date = this.dateToDisplay.format('YYYY-MM-DD');
             if (department.properties && department.properties.nom && department.properties.deceased) {
                 let content = `<h6>${department.properties.nom} (${department.properties.code})</h6>\
-                <p><b>Décès :</b> ${department.properties.deceased[date][0]}<br />\
-                <b>Hommes :</b> ${department.properties.deceased[date][1]}<br />\
-                <b>Femmes :</b> ${department.properties.deceased[date][2]}</p>`;
+                <table class="table table-borderless table-hover">\
+                    <thead>\
+                        <tr>\
+                            <th scope="col">#</th>\
+                            <th scope="col">H</th>\
+                            <th scope="col">F</th>\
+                            <th scope="col">Total</th>\
+                        </tr>\
+                    </thead>\
+                    <tbody>\
+                        <tr>\
+                            <th scope="row">Décès (cumul)</th>\
+                            <td>${department.properties.deceased[date][1]}</td>\
+                            <td>${department.properties.deceased[date][2]}</td>\
+                            <td>${department.properties.deceased[date][0]}</td>\
+                        </tr>\
+                        <tr>\
+                            <th scope="row">Réanimation</th>\
+                            <td>${department.properties.rea[date][1]}</td>\
+                            <td>${department.properties.rea[date][2]}</td>\
+                            <td>${department.properties.rea[date][0]}</td>\
+                        </tr>\
+                    </tbody>
+                </table>`;
                 layer.bindPopup(content);
             }
         },

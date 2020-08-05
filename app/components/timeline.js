@@ -9,7 +9,8 @@ let timelineCmpnt = {
                 <button class="dropdown-item" type="button"
                     :value="date.value"
                     v-for="date in dates"
-                    @mouseover="transmitSelected">
+                    @mouseover="transmitSelected"
+                    @click="transmitLimit">
                     {{ date.text }}
                 </button>
             </div>
@@ -40,6 +41,12 @@ let timelineCmpnt = {
         */
         transmitSelected(e) {
             this.$emit('change-layer', e.target.getAttribute('value'));
+        },
+        /*
+        *   Triggers an event to change the date limit for displaying charts
+        */
+        transmitLimit(e) {
+            this.$emit('change-limit', e.target.getAttribute('value'));
         }
     }
 }

@@ -1,30 +1,33 @@
 // metrics.js
 let metricsCmpnt = {
-    template: `<canvas id="metrics"></canvas>`,
+    template: `<canvas id="metrics" height="300"></canvas>`,
     data() {
         return {
             dates: Array(),
-            data: {
+            metrics: {
                 "deceased": Array(),
                 "rea": Array()
-            }
+            },
+            title: "Données hospitalières sur la France entière (hors EHPAD)"
         }
     },
     created() {
         this.getMetrics();
     },
     methods: {
-        getMetrics() {
+        getMetrics(limit = moment().format("YYYY-MM-DD")) {
             /*
-            *   Fetches the metrics
+            *   Fetches the metrics according to a limit date.
             */
             fetch('./data/metrics.json')
             .then(stream => stream.json())
             .then(data => {
-                this.dates = Object.keys(data);
+                this.dates = Object.keys(data).filter(date => date <= limit);
                 for (date in data) {
-                    this.data['deceased'].push(data[date]['deceased'][0])
-                    this.data['rea'].push(data[date]['rea'][0])
+                    if (date <= limit) {
+                        this.metrics['deceased'].push(data[date]['deceased'][0])
+                        this.metrics['rea'].push(data[date]['rea'][0])
+                    }
                 }
                 this.initChart();
             });
@@ -36,7 +39,7 @@ let metricsCmpnt = {
             var ctx = document.getElementById('metrics').getContext('2d');
             var chart = new Chart(ctx, {
                 // Type of chart
-                type: 'line',
+                type: 'bar',
 
                 // The data for datasets
                 data: {
@@ -46,21 +49,29 @@ let metricsCmpnt = {
                             label: 'Décès (cumul)',
                             borderColor: 'hsl(180, 100%, 30%)',
                             backgroundColor: 'hsl(180, 100%, 30%)',
-                            data: this.data['deceased'],
-                            fill: false,
-                            radius: 0
+                            data: this.metrics['deceased']
                         },
                         {
                             label: 'Réanimation',
                             borderColor: 'hsl(180, 100%, 50%)',
                             backgroundColor: 'hsl(180, 100%, 50%)',
-                            data: this.data['rea'],
-                            fill: false,
-                            radius: 0
+                            data: this.metrics['rea']
                         }
                     ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: this.title
+                    }
                 }
             });
+        },
+        removeChart() {
+            /*
+            *   Removes an obsolete chart
+            */
+            $('#metrics').replaceWith('<canvas id="metrics" height="300"></canvas>');
         }
     }
 }

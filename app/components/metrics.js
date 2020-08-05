@@ -71,6 +71,8 @@ let metricsCmpnt = {
             /*
             *   Removes an obsolete chart
             */
+            this.metrics['deceased'] = Array();
+            this.metrics['rea'] = Array();
             $('#metrics').replaceWith('<canvas id="metrics" height="300"></canvas>');
         }
     }

@@ -35,6 +35,16 @@ var app = new Vue({
             this.dateToDisplay = date;
         },
         /*
+        *   When a day is picked up on the timeline,
+        *   it alse triggers a new Chart.
+        */
+        changeLimit(limit) {
+            // Removes the old chart.
+            this.$refs.metrics.removeChart();
+            // Sets a new Chart with accurate metrics.
+            this.$refs.metrics.getMetrics(limit);
+        },
+        /*
         *   Fetches the data
         */
         fetchData() {

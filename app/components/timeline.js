@@ -14,6 +14,10 @@ let timelineCmpnt = {
                     {{ date.text }}
                 </button>
             </div>
+            <button class="btn btn-secondary" type="button"
+                @click="transmitMonitor">
+                Suivez l’évolution
+            </button>
         </div>`,
     data() {
         return {
@@ -37,16 +41,22 @@ let timelineCmpnt = {
             }
         },
         /*
+        *   Triggers an event to define a point in time for displaying charts
+        */
+        transmitPit(e) {
+            this.$emit('set-pit', e.target.getAttribute('value'));
+        },
+        /*
         *   Triggers an event to change the key date
         */
         transmitSelected(e) {
             this.$emit('change-layer', e.target.getAttribute('value'));
         },
         /*
-        *   Triggers an event to define a point in time for displaying charts
+        *   Triggers an event to show all the data
         */
-        transmitPit(e) {
-            this.$emit('set-pit', e.target.getAttribute('value'));
+        transmitMonitor() {
+            this.$emit('show-all');
         }
     }
 }

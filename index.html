@@ -17,7 +17,11 @@
                 <h1>Le Covid en France</h1>
                 <h3>{{ displayDate }}</h3>
                 <!-- Timeline -->
-                <timeline @change-layer="changeLayer" @set-pit="setPit" ref="timeline"></timeline>
+                <timeline
+                    @change-layer="changeLayer"
+                    @set-pit="setPit"
+                    @show-all="showAll"
+                    ref="timeline"></timeline>
                 <!-- Metrics -->
                 <chart class="mt-5" ref="chart"></chart>
             </div>

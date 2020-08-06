@@ -35,16 +35,6 @@ var app = new Vue({
             this.dateToDisplay = date;
         },
         /*
-        *   When a day is picked up on the timeline,
-        *   it alse triggers a new Chart.
-        */
-        setPit(pit) {
-            // Removes the old chart.
-            this.$refs.chart.removeChart();
-            // Sets a new Chart with accurate metrics.
-            this.$refs.chart.getMetrics(pit);
-        },
-        /*
         *   Fetches the data
         */
         fetchData() {
@@ -60,6 +50,22 @@ var app = new Vue({
                 this.$refs.timeline.listDates([2020, 2, 18], data.date);
 
             });
+        },
+        /*
+        *   When a day is picked up on the timeline,
+        *   it alse triggers a new Chart.
+        */
+        setPit(pit) {
+            // Removes the old chart.
+            this.$refs.chart.removeChart();
+            // Sets a new Chart with accurate metrics.
+            this.$refs.chart.getMetrics(pit);
+        },
+        /*
+        *   A simple way to show all the data in the chart.
+        */
+        showAll() {
+            this.setPit(null);
         }
     }
 })

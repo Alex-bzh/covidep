@@ -13,7 +13,7 @@ var app = new Vue({
     components: {
         'timeline': timelineCmpnt,
         'fr-covid-map': frCovidMapCmpnt,
-        'metrics': metricsCmpnt
+        'chart': chartCmpnt
     },
     computed: {
         /*
@@ -38,11 +38,11 @@ var app = new Vue({
         *   When a day is picked up on the timeline,
         *   it alse triggers a new Chart.
         */
-        changeLimit(limit) {
+        setPit(pit) {
             // Removes the old chart.
-            this.$refs.metrics.removeChart();
+            this.$refs.chart.removeChart();
             // Sets a new Chart with accurate metrics.
-            this.$refs.metrics.getMetrics(limit);
+            this.$refs.chart.getMetrics(pit);
         },
         /*
         *   Fetches the data

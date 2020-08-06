@@ -10,7 +10,7 @@ let timelineCmpnt = {
                     :value="date.value"
                     v-for="date in dates"
                     @mouseover="transmitSelected"
-                    @click="transmitLimit">
+                    @click="transmitPit">
                     {{ date.text }}
                 </button>
             </div>
@@ -21,11 +21,11 @@ let timelineCmpnt = {
         }
     },
     methods: {
+        /*
+        *   Lists all the dates between now and March the 18th, 2020:
+        *   the start date of the Covid accounts in France.
+        */
         listDates(start, end) {
-            /*
-            *   Lists all the dates between now and March the 18th, 2020:
-            *   the start date of the Covid accounts in France.
-            */
             let startDate = moment(start);
             let endDate = moment(end).add(1, "days");
             let diff = endDate.diff(startDate, "days");
@@ -43,10 +43,10 @@ let timelineCmpnt = {
             this.$emit('change-layer', e.target.getAttribute('value'));
         },
         /*
-        *   Triggers an event to change the date limit for displaying charts
+        *   Triggers an event to define a point in time for displaying charts
         */
-        transmitLimit(e) {
-            this.$emit('change-limit', e.target.getAttribute('value'));
+        transmitPit(e) {
+            this.$emit('set-pit', e.target.getAttribute('value'));
         }
     }
 }

@@ -1,6 +1,6 @@
 # Covidep
 
-Visualize the evolution of the mortality of the SARS-CoV-2 in France, since the start of confinement pronounced on March 18, 2020, department by department.
+Visualize the evolution of the mortality of the SARS-CoV-2 in France, since the start of confinement pronounced on March 18, 2020, department by department. The datasets also provide insight into the global capacity of intensive care units in hospital.
 
 A demonstration is available at https://alexandre.roulois.fr/data/dev/covidep/
 

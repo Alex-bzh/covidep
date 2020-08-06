@@ -17,9 +17,9 @@
                 <h1>Le Covid en France</h1>
                 <h3>{{ displayDate }}</h3>
                 <!-- Timeline -->
-                <timeline @change-layer="changeLayer" @change-limit="changeLimit" ref="timeline"></timeline>
+                <timeline @change-layer="changeLayer" @set-pit="setPit" ref="timeline"></timeline>
                 <!-- Metrics -->
-                <metrics class="mt-5" ref="metrics"></metrics>
+                <chart class="mt-5" ref="chart"></chart>
             </div>
             <div class="col-lg-8">
                 <!-- Map -->
@@ -44,7 +44,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <!-- App -->
     <script src="./app/components/fr-covid-map.js"></script>
-    <script src="./app/components/metrics.js"></script>
+    <script src="./app/components/chart.js"></script>
     <script src="./app/components/timeline.js"></script>
     <script src="./app/main.js"></script>
 </body>

@@ -10,13 +10,13 @@ let timelineCmpnt = {
                     :value="date.value"
                     v-for="date in dates"
                     @mouseover="transmitSelected"
-                    @click="transmitPit">
+                    @click="transmitLimit">
                     {{ date.text }}
                 </button>
             </div>
             <button class="btn btn-secondary" type="button"
-                @click="transmitMonitor">
-                Suivez l’évolution
+                @click="transmitZoneFrance">
+                Suivez l’évolution nationale
             </button>
         </div>`,
     data() {
@@ -43,8 +43,8 @@ let timelineCmpnt = {
         /*
         *   Triggers an event to define a point in time for displaying charts
         */
-        transmitPit(e) {
-            this.$emit('set-pit', e.target.getAttribute('value'));
+        transmitLimit(e) {
+            this.$emit('set-limit', e.target.getAttribute('value'));
         },
         /*
         *   Triggers an event to change the key date
@@ -55,7 +55,7 @@ let timelineCmpnt = {
         /*
         *   Triggers an event to show all the data
         */
-        transmitMonitor() {
+        transmitZoneFrance() {
             this.$emit('show-all');
         }
     }

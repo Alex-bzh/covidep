@@ -2,7 +2,9 @@ var app = new Vue({
     el: '#app',
     data: {
         departments: null,
-        dateToDisplay: moment()
+        dateToDisplay: moment(),
+        typeOfChart: 'time-serie',
+        zone: 'france'
     },
     mounted() {
         /*
@@ -55,17 +57,28 @@ var app = new Vue({
         *   When a day is picked up on the timeline,
         *   it alse triggers a new Chart.
         */
-        setPit(pit) {
+        setLimit(limit) {
             // Removes the old chart.
             this.$refs.chart.removeChart();
             // Sets a new Chart with accurate metrics.
-            this.$refs.chart.getMetrics(pit);
+            this.$refs.chart.getMetrics(this.zone, limit);
         },
         /*
         *   A simple way to show all the data in the chart.
         */
         showAll() {
-            this.setPit(null);
+            this.zoomDept(this.dateToDisplay, 'france');
+        },
+        /*
+        *   Zoom to a specific department
+        */
+        zoomDept(limit, dept) {
+            // The zone is fixed to the department
+            this.zone = dept;
+            // Removes the old chart.
+            this.$refs.chart.removeChart();
+            // Sets a new Chart with accurate metrics.
+            this.$refs.chart.getMetrics(dept, limit);
         }
     }
 })

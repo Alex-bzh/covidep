@@ -3,7 +3,6 @@ var app = new Vue({
     data: {
         departments: null,
         dateToDisplay: moment(),
-        typeOfChart: 'time-serie',
         zone: 'france'
     },
     mounted() {
@@ -55,7 +54,7 @@ var app = new Vue({
         },
         /*
         *   When a day is picked up on the timeline,
-        *   it alse triggers a new Chart.
+        *   it also triggers a new Chart.
         */
         setLimit(limit) {
             // Removes the old chart.

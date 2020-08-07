@@ -1,6 +1,12 @@
 // metrics.js
 let chartCmpnt = {
     template: `<canvas id="chart" height="300"></canvas>`,
+    props: {
+        type: {
+            type: String(),
+            required: true
+        }
+    },
     data() {
         return {
             labels: Array(),
@@ -16,52 +22,64 @@ let chartCmpnt = {
                     'W': Array()
                 }
             },
-            title: "Données hospitalières sur la France entière (hors EHPAD)"
+            title: "Données hospitalières (hors EHPAD) – France entière",
+            zone: 'france'
         }
     },
     created() {
-        this.getMetrics();
+        this.getMetrics(this.zone);
     },
     methods: {
         /*
         *   Adds metrics to data for a point in time.
         */
-        addMetrics(metrics, pit) {
-            this.data['deceased']['A'].push(metrics[pit]['deceased'][0]);
-            this.data['deceased']['M'].push(metrics[pit]['deceased'][1]);
-            this.data['deceased']['W'].push(metrics[pit]['deceased'][2]);
-            this.data['rea']['A'].push(metrics[pit]['rea'][0]);
-            this.data['rea']['M'].push(metrics[pit]['rea'][1]);
-            this.data['rea']['W'].push(metrics[pit]['rea'][2]);
+        addMetrics(metrics, limit) {
+            this.data['deceased']['A'].push(metrics['deceased'][limit][0]);
+            this.data['deceased']['M'].push(metrics['deceased'][limit][1]);
+            this.data['deceased']['W'].push(metrics['deceased'][limit][2]);
+            this.data['rea']['A'].push(metrics['rea'][limit][0]);
+            this.data['rea']['M'].push(metrics['rea'][limit][1]);
+            this.data['rea']['W'].push(metrics['rea'][limit][2]);
         },
         /*
         *   Fetches the metrics, according to a point in time (eventually).
         */
-        getMetrics(pit = null) {
+        getMetrics(zone, limit = null) {
+
+            // Defines the zone to display
+            this.zone = zone;
+
+            // Fix the title of the chart
+            if (this.zone != 'france') this.title = "Données hospitalières (hors EHPAD) – Département " + this.zone;
+            else this.title = "Données hospitalières (hors EHPAD) – France entière";
+
             // Fetch API
-            fetch('./data/metrics.json')
+            fetch('./data/metrics-' + this.zone + '.json')
             .then(stream => stream.json())
             .then(metrics => {
-                if (pit) {
+                // Point in time chart
+                if (this.type == 'pit') {
                     this.labels = ['Décès (cumul)', 'Réanimation'];
-                    this.addMetrics(metrics, pit);
+                    this.addMetrics(metrics, limit);
                 }
-                else {
-                    this.labels = Object.keys(metrics);
-                    for (date in metrics) {
-                        this.addMetrics(metrics, date);
+                // Time serie chart
+                else if (this.type == 'time-serie') {
+                    if (limit) labels = this.labels = Object.keys(metrics['deceased']).filter(date => date <= limit);
+                    else labels = this.labels = Object.keys(metrics['deceased'])
+                    for (date in labels) {
+                        this.addMetrics(metrics, labels[date]);
                     }
                 }
-                // Initializes a chart
-                this.initChart(pit);
+                // Initializes the chart
+                this.initChart();
             });
         },
         /*
         *   Initializes a chart
         */
-        initChart(pit = null) {
+        initChart() {
             // Datasets
-            if (pit) {
+            if (this.type == '') {
                 var datasets = [
                     {
                         label: 'Hommes',
@@ -86,7 +104,7 @@ let chartCmpnt = {
                         stacked: true
                     }]
                 };
-            } else {
+            } else if (this.type == 'time-serie') {
                 var datasets = [
                     {
                         label: 'Décès (cumul)',

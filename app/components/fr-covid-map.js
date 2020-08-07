@@ -136,10 +136,10 @@ let frCovidMapCmpnt = {
             };
         },
         /*
-        *   Provokes a zoom on the map, to the bounds of the department
+        *   Selects the metrics of a specific department
         */
         zoomToFeature(event) {
-            this.map.fitBounds(event.target.getBounds());
+            this.$emit('zoom-dept', this.dateToDisplay.format('YYYY-MM-DD'), event.target.feature.properties.code);
         }
     }
 }

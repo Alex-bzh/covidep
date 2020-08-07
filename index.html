@@ -19,15 +19,15 @@
                 <!-- Timeline -->
                 <timeline
                     @change-layer="changeLayer"
-                    @set-pit="setPit"
+                    @set-limit="setLimit"
                     @show-all="showAll"
                     ref="timeline"></timeline>
                 <!-- Metrics -->
-                <chart class="mt-5" ref="chart"></chart>
+                <chart class="mt-5" :type="typeOfChart" ref="chart"></chart>
             </div>
             <div class="col-lg-8">
                 <!-- Map -->
-                <fr-covid-map ref="map"></fr-covid-map>
+                <fr-covid-map ref="map" @zoom-dept="zoomDept"></fr-covid-map>
             </div>
         </div>
     </div>

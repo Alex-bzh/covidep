@@ -34,7 +34,7 @@ def main():
     path_to_geo = '../data/departements.geojson'
     path_to_data = '../data/donnees-hospitalieres.csv'
     path_to_geo_full = '../data/covid-france.json'
-    path_to_metrics = '../data/metrics.json'
+    path_to_metrics = '../data/metrics-france.json'
 
     # Useful structures to analyse the data
     accounts = dict()   # Dictionary with the accounts
@@ -61,20 +61,23 @@ def main():
                 'deceased': { date: dict() for date in dates },
                 'rea': { date: dict() for date in dates }
             },
-            "metrics": {
-                date: {
-                    "deceased": {
-                        "0": int(),
-                        "1": int(),
-                        "2": int()
-                    },
-                    "rea": {
+            "france": {
+                'deceased': {
+                    date: {
                         "0": int(),
                         "1": int(),
                         "2": int()
                     }
+                    for date in dates
+                },
+                'rea': {
+                    date: {
+                        "0": int(),
+                        "1": int(),
+                        "2": int()
+                    }
+                    for date in dates
                 }
-                for date in dates
             }
         })
 
@@ -92,11 +95,13 @@ def main():
                 accounts[line['code']]['deceased'][date][line['sex']] = line['dc']
                 accounts[line['code']]['rea'][date][line['sex']] = line['rea']
                 # Updates the nationwide metrics
-                accounts['metrics'][date]['deceased'][line['sex']] += int(line['dc'])
-                accounts['metrics'][date]['rea'][line['sex']] += int(line['rea'])
+                accounts['france']['deceased'][date][line['sex']] += int(line['dc'])
+                accounts['france']['rea'][date][line['sex']] += int(line['rea'])
 
     # Sorts the metrics by date
-    accounts['metrics'] = dict(sorted(accounts['metrics'].items(), key=lambda item: item[0]))
+    for dept in accounts:
+        accounts[dept]['deceased'] = dict(sorted(accounts[dept]['deceased'].items(), key=lambda item: item[0]))
+        accounts[dept]['rea'] = dict(sorted(accounts[dept]['rea'].items(), key=lambda item: item[0]))
 
     # Reading the geoJSON file of the departments
     with open(path_to_geo) as geojson:
@@ -106,8 +111,8 @@ def main():
     with open(path_to_geo_full, 'w') as jsonfile:
         # The most recent recorded date
         recent = max(dates)
-        metrics = json.dumps(accounts['metrics'])
-        jsonfile.write('{"date":"' + recent + '", "metrics": ' + metrics + ', "type":"FeatureCollection","features":[')
+
+        jsonfile.write('{"date":"' + recent + '", "type":"FeatureCollection","features":[')
         for idx, department in enumerate(output['features']):
             # Code of the department (e.g.: 75, 01, 37…)
             code = department['properties']['code']
@@ -123,9 +128,11 @@ def main():
         # Closes the FeatureCollection and the geoJSON file
         jsonfile.write('\n]}\n')
 
-    # Writes the metrics file
-    with open(path_to_metrics, 'w') as jsonfile:
-        json.dump(accounts['metrics'], jsonfile);
+    # Writes the nationwide metrics and the specific ones to a department
+    for sector in accounts:
+        if sector:
+            with open(f'../data/metrics-{sector}.json', 'w') as jsonfile:
+                json.dump(accounts[sector], jsonfile)
 
 #
 #   Main

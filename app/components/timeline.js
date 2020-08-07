@@ -1,23 +1,27 @@
 // timeline.js
 let timelineCmpnt = {
     template: `
-        <div>
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="datesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Choisissez une date
-            </button>
-            <div class="dropdown-menu scrollable-menu" aria-labelledby="datesMenu">
-                <button class="dropdown-item" type="button"
-                    :value="date.value"
-                    v-for="date in dates"
-                    @mouseover="transmitSelected"
-                    @click="transmitLimit">
-                    {{ date.text }}
+        <div class="d-flex">
+            <div>
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="datesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Choisissez une date
+                </button>
+                <div class="dropdown-menu scrollable-menu" aria-labelledby="datesMenu">
+                    <button class="dropdown-item" type="button"
+                        :value="date.value"
+                        v-for="date in dates"
+                        @mouseover="transmitSelected"
+                        @click="transmitLimit">
+                        {{ date.text }}
+                    </button>
+                </div>
+            </div>
+            <div class="ml-2">
+                <button class="btn btn-secondary" type="button"
+                    @click="transmitZoneFrance">
+                    France entière
                 </button>
             </div>
-            <button class="btn btn-secondary" type="button"
-                @click="transmitZoneFrance">
-                Suivez l’évolution nationale
-            </button>
         </div>`,
     data() {
         return {

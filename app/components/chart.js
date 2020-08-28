@@ -41,6 +41,11 @@ let chartCmpnt = {
                     'A': Array(),
                     'M': Array(),
                     'W': Array()
+                },
+                'hosp': {
+                    'A': Array(),
+                    'M': Array(),
+                    'W': Array()
                 }
             },
             limit: null,
@@ -63,6 +68,9 @@ let chartCmpnt = {
             this.data.rea.A.push(metrics.rea[limit][0]);
             this.data.rea.M.push(metrics.rea[limit][1]);
             this.data.rea.W.push(metrics.rea[limit][2]);
+            this.data.hosp.A.push(metrics.hosp[limit][0]);
+            this.data.hosp.M.push(metrics.hosp[limit][1]);
+            this.data.hosp.W.push(metrics.hosp[limit][2]);
         },
         changeTypeOfChart(e) {
             this.typeOfChart = e.target.value;
@@ -95,7 +103,7 @@ let chartCmpnt = {
                 }
                 // Point in time chart
                 if (this.typeOfChart == 'pit') {
-                    this.labels = ['Décès (cumul)', 'Réanimation'];
+                    this.labels = ['Décès (cumul)', 'Hospitalisations', 'Réanimation'];
                     this.addMetrics(metrics, limit);
                 }
                 // Time serie chart
@@ -121,14 +129,14 @@ let chartCmpnt = {
                         label: 'Hommes',
                         borderColor: 'hsl(180, 100%, 25%)',
                         backgroundColor: 'hsla(180, 100%, 25%)',
-                        data: [this.data.deceased.M, this.data.rea.M],
+                        data: [this.data.deceased.M, this.data.hosp.M, this.data.rea.M],
                         stack: 'men'
                     },
                     {
                         label: 'Femmes',
                         borderColor: 'hsl(180, 100%, 55%)',
                         backgroundColor: 'hsla(180, 100%, 55%)',
-                        data: [this.data.deceased.W, this.data.rea.W],
+                        data: [this.data.deceased.W, this.data.hosp.W, this.data.rea.W],
                         stack: 'women'
                     }
                 ];
@@ -147,6 +155,12 @@ let chartCmpnt = {
                         borderColor: 'hsl(180, 100%, 25%)',
                         backgroundColor: 'hsl(180, 100%, 25%)',
                         data: this.data.deceased.A
+                    },
+                    {
+                        label: 'Hospitalisations',
+                        borderColor: 'hsl(130, 50%, 70%)',
+                        backgroundColor: 'hsl(130, 50%, 70%)',
+                        data: this.data.hosp.A
                     },
                     {
                         label: 'Réanimation',
@@ -189,6 +203,11 @@ let chartCmpnt = {
                     'W': Array()
                 },
                 'rea': {
+                    'A': Array(),
+                    'M': Array(),
+                    'W': Array()
+                },
+                'hosp': {
                     'A': Array(),
                     'M': Array(),
                     'W': Array()

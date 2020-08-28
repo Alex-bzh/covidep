@@ -59,7 +59,8 @@ def main():
         accounts.update({
             department: {
                 'deceased': { date: dict() for date in dates },
-                'rea': { date: dict() for date in dates }
+                'rea': { date: dict() for date in dates },
+                'hosp': { date: dict() for date in dates }
             },
             "france": {
                 'deceased': {
@@ -71,6 +72,14 @@ def main():
                     for date in dates
                 },
                 'rea': {
+                    date: {
+                        "0": int(),
+                        "1": int(),
+                        "2": int()
+                    }
+                    for date in dates
+                },
+                'hosp': {
                     date: {
                         "0": int(),
                         "1": int(),
@@ -94,14 +103,17 @@ def main():
                 # - the number of people in reanimation at the day.
                 accounts[line['code']]['deceased'][date][line['sex']] = line['dc']
                 accounts[line['code']]['rea'][date][line['sex']] = line['rea']
+                accounts[line['code']]['hosp'][date][line['sex']] = line['hosp']
                 # Updates the nationwide metrics
                 accounts['france']['deceased'][date][line['sex']] += int(line['dc'])
                 accounts['france']['rea'][date][line['sex']] += int(line['rea'])
+                accounts['france']['hosp'][date][line['sex']] += int(line['hosp'])
 
     # Sorts the metrics by date
     for dept in accounts:
         accounts[dept]['deceased'] = dict(sorted(accounts[dept]['deceased'].items(), key=lambda item: item[0]))
         accounts[dept]['rea'] = dict(sorted(accounts[dept]['rea'].items(), key=lambda item: item[0]))
+        accounts[dept]['hosp'] = dict(sorted(accounts[dept]['hosp'].items(), key=lambda item: item[0]))
 
     # Reading the geoJSON file of the departments
     with open(path_to_geo) as geojson:
@@ -119,7 +131,8 @@ def main():
             # Looks up in the accounts the records for this particular department
             department['properties'].update({
                 'deceased': accounts.get(code)['deceased'],
-                'rea': accounts.get(code)['rea']
+                'rea': accounts.get(code)['rea'],
+                'hosp': accounts.get(code)['hosp']
             })
             # As a JSON formatted stream
             json.dump(department, jsonfile)

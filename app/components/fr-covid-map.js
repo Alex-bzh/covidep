@@ -113,6 +113,12 @@ let frCovidMapCmpnt = {
                             <td>${department.properties.deceased[date][0]}</td>\
                         </tr>\
                         <tr>\
+                            <th scope="row">Hospitalisations</th>\
+                            <td>${department.properties.hosp[date][1]}</td>\
+                            <td>${department.properties.hosp[date][2]}</td>\
+                            <td>${department.properties.hosp[date][0]}</td>\
+                        </tr>\
+                        <tr>\
                             <th scope="row">Réanimation</th>\
                             <td>${department.properties.rea[date][1]}</td>\
                             <td>${department.properties.rea[date][2]}</td>\

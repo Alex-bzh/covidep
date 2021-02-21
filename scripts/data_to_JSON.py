@@ -42,6 +42,7 @@ def main():
     path_to_geo = './departements.geojson'
     path_to_data = './donnees-hospitalieres.csv'
     path_to_incidence = './sp-pe-std-quot-dep.csv'
+    path_to_incidence_fr = './sp-pe-std-quot-fra.csv'
     path_to_geo_full = '../data/covid-france.json'
 
     # Useful structures to analyse the data
@@ -104,7 +105,8 @@ def main():
 
     # Reading the data CSV files
     with    open(path_to_data, newline='') as hospi_file,\
-            open(path_to_incidence, newline='') as incidence_file :
+            open(path_to_incidence, newline='') as incidence_file,\
+            open(path_to_incidence_fr, newline='') as incidence_fr_file :
 
         # Fieldnames
         hospi_fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'rad', 'dc']
@@ -113,6 +115,7 @@ def main():
         # Fetch rows
         hospi_rows = csv.DictReader(hospi_file, delimiter=';', fieldnames=hospi_fieldnames)
         incidence_rows = csv.DictReader(incidence_file, delimiter=';', fieldnames=incidence_fieldnames)
+        incidence_fr_rows = csv.DictReader(incidence_fr_file, delimiter=';', fieldnames=incidence_fieldnames)
 
         # Firstly, the data about hospitalisations
         for idx, row in enumerate(hospi_rows):
@@ -137,7 +140,10 @@ def main():
             # - the standard incidence rate.
             if idx != 0 and row['code'] not in ['975', '977', '978']:
                 accounts[row['code']]['incidence'][row['date']] = row['tx_std']
-                # TODO : the nationwide incidence rate
+        # Lastly, the same data as above, but nationwide
+        for idx, row in enumerate(incidence_fr_rows):
+            if idx != 0:
+                accounts['france']['incidence'][row['date']] = row['tx_std']
 
 
     # Sorts the metrics by date

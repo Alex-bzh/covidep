@@ -14,7 +14,8 @@ var app = new Vue({
     components: {
         'timeline': timelineCmpnt,
         'fr-covid-map': frCovidMapCmpnt,
-        'chart': chartCmpnt
+        'chart': chartCmpnt,
+        'i-rate': iRateCmpnt
     },
     computed: {
         /*
@@ -74,10 +75,12 @@ var app = new Vue({
         zoomDept(limit, dept) {
             // The zone is fixed to the department
             this.zone = dept;
-            // Removes the old chart.
+            // Removes the old charts.
             this.$refs.chart.removeChart();
-            // Sets a new Chart with accurate metrics.
+            this.$refs.irate.removeChart();
+            // Sets new charts with accurate metrics.
             this.$refs.chart.getMetrics(dept, limit);
+            this.$refs.irate.getMetrics(dept);
         }
     }
 })

@@ -31,10 +31,10 @@ def main():
     today = f'{date.year}-{date.month}-{date.day}'
 
     # Paths to the files
-    path_to_geo = '../data/departements.geojson'
-    path_to_data = '../data/donnees-hospitalieres.csv'
+    path_to_geo = './departements.geojson'
+    path_to_data = './donnees-hospitalieres.csv'
+    path_to_incidence = './sp-pe-std-quot-dep.csv'
     path_to_geo_full = '../data/covid-france.json'
-    path_to_metrics = '../data/metrics-france.json'
 
     # Useful structures to analyse the data
     accounts = dict()   # Dictionary with the accounts
@@ -60,7 +60,8 @@ def main():
             department: {
                 'deceased': { date: dict() for date in dates },
                 'rea': { date: dict() for date in dates },
-                'hosp': { date: dict() for date in dates }
+                'hosp': { date: dict() for date in dates },
+                'incidence': { date: dict() for date in dates },
             },
             "france": {
                 'deceased': {
@@ -86,34 +87,57 @@ def main():
                         "2": int()
                     }
                     for date in dates
+                },
+                'incidence': {
+                    date: float() for date in dates
                 }
             }
         })
 
-    # Reading the CSV file a second time
-    with open(path_to_data, newline='') as csvfile:
-        fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'rad', 'dc']
-        lines = csv.DictReader(csvfile, delimiter=';', fieldnames=fieldnames)
-        for idx, line in enumerate(lines):
+    # Reading the data CSV files
+    with    open(path_to_data, newline='') as hospi_file,\
+            open(path_to_incidence, newline='') as incidence_file :
+
+        # Fieldnames
+        hospi_fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'rad', 'dc']
+        incidence_fieldnames = ['code', 'date', 'pop', 'P', 'tx_std']
+
+        # Fetch rows
+        hospi_rows = csv.DictReader(hospi_file, delimiter=';', fieldnames=hospi_fieldnames)
+        incidence_rows = csv.DictReader(incidence_file, delimiter=';', fieldnames=incidence_fieldnames)
+
+        # Firstly, the data about hospitalisations
+        for idx, row in enumerate(hospi_rows):
             if idx != 0:
                 # Dates do not all respect the same format
-                date = format_date(line['date'])
+                date = format_date(row['date'])
                 # Updates the account of each department with:
                 # - the total amount of deceased people;
-                # - the number of people in reanimation at the day.
-                accounts[line['code']]['deceased'][date][line['sex']] = line['dc']
-                accounts[line['code']]['rea'][date][line['sex']] = line['rea']
-                accounts[line['code']]['hosp'][date][line['sex']] = line['hosp']
+                # - the number of people in reanimation at the day;
+                # - the number of people admitted in hospital at the day.
+                accounts[row['code']]['deceased'][date][row['sex']] = row['dc']
+                accounts[row['code']]['rea'][date][row['sex']] = row['rea']
+                accounts[row['code']]['hosp'][date][row['sex']] = row['hosp']
                 # Updates the nationwide metrics
-                accounts['france']['deceased'][date][line['sex']] += int(line['dc'])
-                accounts['france']['rea'][date][line['sex']] += int(line['rea'])
-                accounts['france']['hosp'][date][line['sex']] += int(line['hosp'])
+                accounts['france']['deceased'][date][row['sex']] += int(row['dc'])
+                accounts['france']['rea'][date][row['sex']] += int(row['rea'])
+                accounts['france']['hosp'][date][row['sex']] += int(row['hosp'])
+
+        # Secondly, data about the incidence rate
+        for idx, row in enumerate(incidence_rows):
+            # Updates the account of each department with :
+            # - the standard incidence rate.
+            if idx != 0 and row['code'] not in ['975', '977', '978']:
+                accounts[row['code']]['incidence'][row['date']] = row['tx_std']
+                # TODO : the nationwide incidence rate
+
 
     # Sorts the metrics by date
     for dept in accounts:
         accounts[dept]['deceased'] = dict(sorted(accounts[dept]['deceased'].items(), key=lambda item: item[0]))
         accounts[dept]['rea'] = dict(sorted(accounts[dept]['rea'].items(), key=lambda item: item[0]))
         accounts[dept]['hosp'] = dict(sorted(accounts[dept]['hosp'].items(), key=lambda item: item[0]))
+        accounts[dept]['incidence'] = dict(sorted(accounts[dept]['incidence'].items(), key=lambda item: item[0]))
 
     # Reading the geoJSON file of the departments
     with open(path_to_geo) as geojson:
@@ -132,7 +156,8 @@ def main():
             department['properties'].update({
                 'deceased': accounts.get(code)['deceased'],
                 'rea': accounts.get(code)['rea'],
-                'hosp': accounts.get(code)['hosp']
+                'hosp': accounts.get(code)['hosp'],
+                'incidence': accounts.get(code)['incidence'],
             })
             # As a JSON formatted stream
             json.dump(department, jsonfile)

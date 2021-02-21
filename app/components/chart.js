@@ -1,4 +1,4 @@
-// metrics.js
+// chart.js
 let chartCmpnt = {
     template: `
         <div>

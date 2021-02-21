@@ -16,16 +16,20 @@ let frCovidMapCmpnt = {
         *   Sets a color according to the value of a stat
         */
         covidColor(n) {
-            return  n > 1000 ? 'hsl(180, 100%, 9%)' :
-                    n > 750 ? 'hsl(180, 100%, 19%)' :
-                    n > 500 ? 'hsl(180, 100%, 25%)' :
-                    n > 400 ? 'hsl(180, 100%, 30%)' :
-                    n > 300 ? 'hsl(180, 100%, 35%)' :
-                    n > 200 ? 'hsl(180, 100%, 40%)' :
-                    n > 100 ? 'hsl(180, 100%, 45%)' :
-                    n > 50 ? 'hsl(180, 100%, 50%)' :
-                    n > 25 ? 'hsl(180, 100%, 70%)' :
-                              'hsl(180, 100%, 90%)';
+            return  n > 90 ? 'hsl(21, 86%, 7%)' :
+                    n > 80 ? 'hsl(21, 86%, 13%)' :
+                    n > 70 ? 'hsl(21, 86%, 23%)' :
+                    n > 60 ? 'hsl(21, 86%, 33%)' :
+                    n > 50 ? 'hsl(21, 86%, 43%)' :
+                    n > 40 ? 'hsl(21, 86%, 53%)' :
+                    n > 30 ? 'hsl(21, 86%, 63%)' :
+                    n > 20 ? 'hsl(21, 86%, 73%)' :
+                    n > 10 ? 'hsl(21, 86%, 83%)' :
+                    n > 5 ? 'hsl(180, 100%, 45%)' :
+                    n > 2 ? 'hsl(180, 100%, 60%)' :
+                    n > 1 ? 'hsl(180, 100%, 75%)' :
+                    n > 0.5 ? 'hsl(180, 100%, 85%)' :
+                              'hsl(180, 100%, 95%)';
         },
         /*
         *   Highlights a department
@@ -95,35 +99,39 @@ let frCovidMapCmpnt = {
         setPopup(department, layer) {
             let date = this.dateToDisplay.format('YYYY-MM-DD');
             if (department.properties && department.properties.nom && department.properties.deceased) {
-                let content = `<h6>${department.properties.nom} (${department.properties.code})</h6>\
-                <table class="table table-borderless table-hover">\
-                    <thead>\
-                        <tr>\
-                            <th scope="col">#</th>\
-                            <th scope="col">H</th>\
-                            <th scope="col">F</th>\
-                            <th scope="col">Total</th>\
-                        </tr>\
-                    </thead>\
-                    <tbody>\
-                        <tr>\
-                            <th scope="row">Décès (cumul)</th>\
-                            <td>${department.properties.deceased[date][1]}</td>\
-                            <td>${department.properties.deceased[date][2]}</td>\
-                            <td>${department.properties.deceased[date][0]}</td>\
-                        </tr>\
-                        <tr>\
-                            <th scope="row">Hospitalisations</th>\
-                            <td>${department.properties.hosp[date][1]}</td>\
-                            <td>${department.properties.hosp[date][2]}</td>\
-                            <td>${department.properties.hosp[date][0]}</td>\
-                        </tr>\
-                        <tr>\
-                            <th scope="row">Réanimation</th>\
-                            <td>${department.properties.rea[date][1]}</td>\
-                            <td>${department.properties.rea[date][2]}</td>\
-                            <td>${department.properties.rea[date][0]}</td>\
-                        </tr>\
+                let content = `<h6>${department.properties.nom} (${department.properties.code})</h6>
+                <table class="table table-borderless table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">H</th>
+                            <th scope="col">F</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Décès (cumul)</th>
+                            <td>${department.properties.deceased[date][1]}</td>
+                            <td>${department.properties.deceased[date][2]}</td>
+                            <td>${department.properties.deceased[date][0]}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Hospitalisations</th>
+                            <td>${department.properties.hosp[date][1]}</td>
+                            <td>${department.properties.hosp[date][2]}</td>
+                            <td>${department.properties.hosp[date][0]}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Réanimation</th>
+                            <td>${department.properties.rea[date][1]}</td>
+                            <td>${department.properties.rea[date][2]}</td>
+                            <td>${department.properties.rea[date][0]}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Taux d’incidence</th>
+                            <td colspan="3">${parseFloat(department.properties.incidence[date]).toFixed(2)}</td>
+                        </tr>
                     </tbody>
                 </table>`;
                 layer.bindPopup(content);
@@ -135,7 +143,7 @@ let frCovidMapCmpnt = {
         setStyle(department) {
             let date = this.dateToDisplay.format("YYYY-MM-DD");
             return {
-                fillColor: this.covidColor(department.properties.deceased[date][0]),
+                fillColor: this.covidColor(department.properties.incidence[date]),
                 weight: 1,
                 color: 'white',
                 fillOpacity: 1

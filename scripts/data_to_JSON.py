@@ -21,6 +21,14 @@ def format_date(date):
 
     return date
 
+def get_recent_date():
+    dates = set()
+    with open('./sp-pe-std-quot-dep.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        for row in reader:
+            dates.add(row['jour'])
+    return max(dates)
+
 #
 #   Main function
 #
@@ -146,7 +154,7 @@ def main():
     # Writes a geoJSON file
     with open(path_to_geo_full, 'w') as jsonfile:
         # The most recent recorded date
-        recent = max(dates)
+        recent = get_recent_date()
 
         jsonfile.write('{"date":"' + recent + '", "type":"FeatureCollection","features":[')
         for idx, department in enumerate(output['features']):

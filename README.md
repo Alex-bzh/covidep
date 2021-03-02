@@ -25,7 +25,7 @@ SPF (Santé publique France) provide updated data day by day through their infor
 - [Système d’Informations de DEPistage (SI-DEP)](https://www.data.gouv.fr/fr/datasets/taux-dincidence-de-lepidemie-de-covid-19/)
 
 1. on the first link, download the CSV file called `donnees-hospitalieres-covid19-2021\*.csv`
-2. on the second one, download the files `sp-pe-std-quot-dep.csv` and `sp-pe-std-quot-fra.csv` (useful to calculate the incidence rate)
+2. on the second one, download the files `sp-pe-std-quot-dep-2021\*.csv` and `sp-pe-std-quot-fra-2021\*.csv` (useful to calculate the incidence rate)
 3. save it in the `script` folder
 4. run the script `data_to_JSON.py`
 ```shell

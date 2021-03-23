@@ -52,7 +52,7 @@ def main():
 
     # Reading the CSV file
     with open(path_to_data, newline='') as csvfile:
-        fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'rad', 'dc']
+        fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'hosp_conv', 'ssr_usld', 'autres', 'rad', 'dc']
         lines = csv.DictReader(csvfile, delimiter=';', fieldnames=fieldnames)
         for idx, line in enumerate(lines):
             # Skips the header
@@ -109,7 +109,7 @@ def main():
             open(path_to_incidence_fr, newline='') as incidence_fr_file :
 
         # Fieldnames
-        hospi_fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'rad', 'dc']
+        hospi_fieldnames = ['code', 'sex', 'date', 'hosp', 'rea', 'hosp_conv', 'ssr_usld', 'autres', 'rad', 'dc']
         incidence_fieldnames = ['code', 'date', 'pop', 'P', 'tx_std']
 
         # Fetch rows
